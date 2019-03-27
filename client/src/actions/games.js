@@ -68,6 +68,7 @@ export const createGame = () => (dispatch, getState) => {
     .catch(err => console.error(err))
 }
 
+// change this 
 export const updateGame = (gameId, board) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt

@@ -12,10 +12,11 @@ const renderCel = (makeMove, rowIndex, cellIndex, symbol, hasTurn) => {
   )
 }
 
-export default (game) => {
+export default ({game, makeMove}) => {
   console.log(game)
-  return board.map((cells, rowIndex) =>
-  <div key={rowIndex}>
-    {cells.map((symbol, cellIndex) => renderCel(makeMove, rowIndex, cellIndex,symbol,false))}
-  </div>)
+  return game.map((cells, rowIndex) =>
+    <div key={rowIndex}>
+      {cells.map((symbol, cellIndex) => renderCel(makeMove, rowIndex, cellIndex,symbol,false))}
+    </div>
+  )
 }

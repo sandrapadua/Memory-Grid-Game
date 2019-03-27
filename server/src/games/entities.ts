@@ -43,7 +43,7 @@ export class Game extends BaseEntity {
 }
 
 @Entity()
-@Index(['game', 'user', 'symbol'], {unique:true})
+@Index(['game', 'user'], {unique:true})
 export class Player extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -55,8 +55,8 @@ export class Player extends BaseEntity {
   @ManyToOne(_ => Game, game => game.players)
   game: Game
 
-  @Column('char', {length: 1})
-  symbol: Symbol
+  // @Column('char', {length: 1})
+  // symbol: Symbol
 
   @Column('integer', { name: 'user_id' })
   userId: number

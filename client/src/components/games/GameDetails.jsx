@@ -9,6 +9,19 @@ import Board from './Board'
 import './GameDetails.css'
 
 class GameDetails extends PureComponent {
+  state = {
+    highLightedSquares: [
+      [
+        null, null, 'green'
+      ],
+      [
+        null, null, 'green'
+      ],
+      [
+        null, null, 'green'
+      ]
+    ]
+  }
 
   componentWillMount() {
     if (this.props.authenticated) {
@@ -20,17 +33,24 @@ class GameDetails extends PureComponent {
   joinGame = () => this.props.joinGame(this.props.game.id)
 
   makeMove = (toRow, toCell) => {
-    const {game, updateGame} = this.props
+    // const {game, updateGame} = this.props
 
-    const board = game.board.map(
-      (row, rowIndex) => row.map((cell, cellIndex) => {
-        if (rowIndex === toRow && cellIndex === toCell) return game.turn
-        else return cell
-      })
-    )
+    // const board = game.challenge.map(
+    //   (row, rowIndex) => row.map((cell, cellIndex) => {
+    //     if (rowIndex === toRow && cellIndex === toCell) return game.turn
+    //     else return cell
+    //   })
+    // )
 
-    console.log(board)
-    updateGame(game.id, board)
+    // console.log(board)
+    // updateGame(game.id, board)
+
+    // use setState to change highlighted squares
+    
+    this.setState({
+    highLightedSquares: high
+    })
+    console.log(toRow, toCell)
   }
 
 
@@ -77,7 +97,14 @@ class GameDetails extends PureComponent {
 
       {
         game.status !== 'pending' &&
-        <Board game={game} makeMove={this.makeMove} />
+        <div>
+        <Board game={game.challenge} 
+          makeMove={this.makeMove} 
+          highLightedSquares={this.state.highLightedSquares}
+        />
+        // render a button here: submit 
+        <button>Submit</button>
+        </div>
       }
     </Paper>)
   }
