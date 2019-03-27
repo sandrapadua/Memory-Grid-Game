@@ -3,8 +3,10 @@ import {
   Body, Patch 
 } from 'routing-controllers'
 import User from '../users/entity'
-import { Game, Player, Board } from './entities'
-import {IsBoard, isValidTransition, calculateWinner, finished} from './logic'
+import { Game, Player, Challenge,Attempt } from './entities'
+import {IsBoard, 
+  // isValidTransition, 
+  calculateWinner, finished} from './logic'
 import { Validate } from 'class-validator'
 import {io} from '../index'
 
@@ -13,7 +15,7 @@ class GameUpdate {
   @Validate(IsBoard, {
     message: 'Not a valid board'
   })
-  board: Board
+  board: Challenge| Attempt
 }
 
 @JsonController()
@@ -23,14 +25,15 @@ export default class GameController {
   @Post('/games')
   @HttpCode(201)
   async createGame(
-    @CurrentUser() user: User
+    @CurrentUser() user: User 
   ) {
     const entity = await Game.create().save()
 
     await Player.create({
       game: entity, 
       user,
-      symbol: 'x'
+      symbol: 'x',
+
     }).save()
 
     const game = await Game.findOneById(entity.id)
@@ -60,7 +63,7 @@ export default class GameController {
     const player = await Player.create({
       game, 
       user,
-      symbol: 'o'
+      // symbol: 'o'
     }).save()
 
     io.emit('action', {
@@ -81,6 +84,7 @@ export default class GameController {
     @Param('id') gameId: number,
     @Body() update: GameUpdate
   ) {
+    console.log('I am not a crazy person')
     const game = await Game.findOneById(gameId)
     if (!game) throw new NotFoundError(`Game does not exist`)
 
@@ -89,9 +93,9 @@ export default class GameController {
     if (!player) throw new ForbiddenError(`You are not part of this game`)
     if (game.status !== 'started') throw new BadRequestError(`The game is not started yet`)
     if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)
-    if (!isValidTransition(player.symbol, game.board, update.board)) {
-      throw new BadRequestError(`Invalid move`)
-    }    
+    // if (!isValidTransition(player.symbol, game.board, update.board)) {
+    //   throw new BadRequestError(`Invalid move`)
+    // }    
 
     const winner = calculateWinner(update.board)
     if (winner) {
@@ -111,6 +115,8 @@ export default class GameController {
       type: 'UPDATE_GAME',
       payload: game
     })
+
+    io.emit('action', {type: 'Hello_World', payload: 'hi'})
 
     return game
   }

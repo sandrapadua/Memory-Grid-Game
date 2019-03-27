@@ -28,6 +28,8 @@ class GameDetails extends PureComponent {
         else return cell
       })
     )
+
+    console.log(board)
     updateGame(game.id, board)
   }
 
@@ -75,7 +77,7 @@ class GameDetails extends PureComponent {
 
       {
         game.status !== 'pending' &&
-        <Board board={game.board} makeMove={this.makeMove} />
+        <Board game={game} makeMove={this.makeMove} />
       }
     </Paper>)
   }
