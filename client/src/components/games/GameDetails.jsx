@@ -13,7 +13,7 @@ class GameDetails extends PureComponent {
   state = {
     squares: [
       [
-        '-', '-', '-'
+        null, null, null
       ],
       [
         null, null, null
@@ -110,7 +110,7 @@ class GameDetails extends PureComponent {
       {
         game.status !== 'pending' &&
         <div>
-          first square: {this.state.squares[0][0]}
+          {game.winner}
           <Board
             boardChallenger={game.challenge} 
             boardAttempter = {game.attempt}
