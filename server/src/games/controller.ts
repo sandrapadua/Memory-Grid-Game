@@ -119,31 +119,12 @@ console.log("PLAYER *************",player.role)
       game.challenge = update.board
       game.turn = 'attempter'
     } else {
+      game.attempt = update.board
       console.log('attempters turn test!')
-
-      
-    }
-    
+  }
     await game.save()
 
-    // if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)
-    // if (!isValidTransition(player.symbol, game.board, update.board)) {
-    //   throw new BadRequestError(`Invalid move`)
-    // }    
-
-    // const winner = calculateWinner(update.board)
-    // if (winner) {
-    //   game.winner = winner
-    //   game.status = 'finished'
-    // }
-    // else if (finished(update.board)) {
-    //   game.status = 'finished'
-    // }
-    // else {
-    //   game.turn = player.symbol === 'x' ? 'o' : 'x'
-    // }
-    // game.board = update.board
-    // await game.save()
+    
     
     io.emit('action', {
       type: 'UPDATE_GAME',

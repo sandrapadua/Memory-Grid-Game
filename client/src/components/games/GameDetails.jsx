@@ -38,12 +38,11 @@ class GameDetails extends PureComponent {
     console.log('role test:' ,game.players[0].role)
     console.log(game)
     
-    const playersUserId = this.props.user.id
+    const userRole = this.props.user.role
 
-    console.log("userid",playersUserId)
+    console.log("userRole test:", userRole)
     // updateGame(game.id, board)
-// if(game.players.userId === game.players[0].role)
-    // use setState to change highlighted squares
+   
 
 let clickArray = this.state.highLightedSquares
 clickArray[toRow][toCell] = 'x'
@@ -53,8 +52,14 @@ clickArray[toRow][toCell] = 'x'
 
        console.log('Board', this.state.highLightedSquares)
        console.log("USER DETAILS",userId)
-
+       console.log("TURN" ,game.turn)
+       if(game.turn ==='attempter'){
+         console.log('board of attempter' ,this.state.highLightedSquares)
+        updateGame(game.id, this.state.highLightedSquares)
+         console.log("ATTEMPTER TURN")
+       }
   }
+ 
 
 onclickEvent = () =>{
   const {game, updateGame} = this.props
