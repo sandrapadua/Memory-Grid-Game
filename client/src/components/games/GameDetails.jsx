@@ -11,9 +11,9 @@ import './GameDetails.css'
 
 class GameDetails extends PureComponent {
   state = {
-    highLightedSquares: [
+    squares: [
       [
-        null, null, null
+        '-', '-', '-'
       ],
       [
         null, null, null
@@ -34,42 +34,41 @@ class GameDetails extends PureComponent {
   joinGame = () => this.props.joinGame(this.props.game.id)
 
   makeMove = (toRow, toCell) => {
+    console.log('\nMAKE MOVE')
     const {game} = this.props
-    console.log('role test:' ,game.players[0].role)
-    console.log(game)
-    
-    const userRole = this.props.user.role
-
-    console.log("userRole test:", userRole)
-    // updateGame(game.id, board)
+    console.log('game test:', game)
    
-
-let clickArray = this.state.highLightedSquares
-clickArray[toRow][toCell] = 'x'
+    let clickArray = [...this.state.squares]
+    clickArray[toRow][toCell] = 'x'
+    console.log('clickArray test:', clickArray)
     this.setState({
-      highLightedSquares : clickArray
-       })
+      squares: clickArray
+    })
 
-       console.log('Board', this.state.highLightedSquares)
-       console.log("USER DETAILS",userId)
-       console.log("TURN" ,game.turn)
-       if(game.turn ==='attempter'){
-         console.log('board of attempter' ,this.state.highLightedSquares)
-        updateGame(game.id, this.state.highLightedSquares)
-         console.log("ATTEMPTER TURN")
-       }
+    console.log('Board', this.state.squares)
+    console.log("TURN" ,game.turn)
+
+    if (game.turn ==='attempter') {
+      console.log('board of attempter', this.state.squares)
+
+      updateGame(game.id, this.state.squares)
+
+      console.log("ATTEMPTER TURN")
+    }
   }
- 
 
-onclickEvent = () =>{
-  const {game, updateGame} = this.props
+  onclickEvent = () =>{
+    const {game, updateGame} = this.props
 
-  console.log('ID', game.id)
-  updateGame(game.id, this.state.highLightedSquares)
-}
+    console.log('ID', game.id)
+    updateGame(game.id, this.state.squares)
+  }
 
   render() {
     const {game, users, authenticated, userId} = this.props
+
+    const firstSquare = this.state.squares[0][0]
+    console.log('firstSquare test:', firstSquare)
 
     if (!authenticated) return (
 			<Redirect to="/login" />
@@ -91,7 +90,7 @@ onclickEvent = () =>{
 
       {
         game.status === 'started' &&
-        player && player.symbol === game.turn &&
+        player && player.role === game.turn &&
         <div>It's your turn!</div>
       }
 
@@ -111,14 +110,18 @@ onclickEvent = () =>{
       {
         game.status !== 'pending' &&
         <div>
-        <Board boardChallenger={game.challenge} 
-        boardAttempter = {game.attempt}
-        turn={game.turn}
-          makeMove={this.makeMove} 
-          highLightedSquares={this.state.highLightedSquares}
-        />
-         {/* render a button here: submit  */}
-        <button id ={game.id} onClick = {this.onclickEvent}>Submit</button>
+          first square: {this.state.squares[0][0]}
+          <Board
+            boardChallenger={game.challenge} 
+            boardAttempter = {game.attempt}
+            turn={game.turn}
+            makeMove={this.makeMove} 
+            squares={this.state.squares}
+          />
+
+          <button id ={game.id} onClick = {this.onclickEvent}>
+            Submit
+          </button>
         </div>
       }
     </Paper>)

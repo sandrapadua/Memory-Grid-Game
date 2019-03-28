@@ -8,27 +8,35 @@ const renderCel = (makeMove, rowIndex, cellIndex, symbol, hasTurn) => {
       disabled={hasTurn}
       onClick={() => makeMove(rowIndex, cellIndex)}
       key={`${rowIndex}-${cellIndex}`}
-    ></button>
+    >{symbol}</button>
   )
 }
 
-export default ({boardChallenger, boardAttempter,makeMove, turn}) => {
-  console.log(('BOARD OF CHALLENGER', boardChallenger));
-  
-if(turn !== 'challenger'){
-  return boardAttempter.map((cells, rowIndex) =>
-  <div key={rowIndex}>
-    {cells.map((symbol, cellIndex) => renderCel(makeMove, rowIndex, cellIndex,symbol,false))}
+const renderBoard = (board, squares, makeMove) => board.map((cells, rowIndex) => {
+  console.log('rowIndex test:', rowIndex)
+  return <div key={rowIndex}>
+    {cells.map(
+      (symbol, cellIndex) => {
+        console.log('cellIndex test:', cellIndex)
+        symbol = squares[rowIndex][cellIndex]
+        console.log('symbol test:', symbol)
+        return renderCel(makeMove, rowIndex, cellIndex, symbol, false)
+      }
+    )}
   </div>
-)
+})
 
-}else{
-  console.log(('BOARD OF ATTEMPTER', boardAttempter));
+export default ({boardChallenger, boardAttempter, makeMove, turn, squares}) => {
+  console.log('\nRENDER BOARD')
 
-  return boardChallenger.map((cells, rowIndex) =>
-    <div key={rowIndex}>
-      {cells.map((symbol, cellIndex) => renderCel(makeMove, rowIndex, cellIndex,symbol,false))}
-    </div>
-  )
-}
+  console.log('squares test:', squares)
+  if (turn !== 'challenger') {
+    console.log('BOARD OF CHALLENGER', boardChallenger)
+
+    return renderBoard(boardAttempter, squares, makeMove)
+  } else {
+    console.log(('BOARD OF ATTEMPTER', boardAttempter))
+
+    return renderBoard(boardChallenger, squares, makeMove)
+  }
 }
