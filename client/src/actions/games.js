@@ -70,6 +70,7 @@ export const createGame = () => (dispatch, getState) => {
 
 // change this 
 export const updateGame = (gameId, board) => (dispatch, getState) => {
+  console.log('entered into updategame',board)
   const state = getState()
   const jwt = state.currentUser.jwt
 

@@ -8,17 +8,18 @@ import Paper from '@material-ui/core/Paper'
 import Board from './Board'
 import './GameDetails.css'
 
+
 class GameDetails extends PureComponent {
   state = {
     highLightedSquares: [
       [
-        null, null, 'green'
+        null, null, null
       ],
       [
-        null, null, 'green'
+        null, null, null
       ],
       [
-        null, null, 'green'
+        null, null, null
       ]
     ]
   }
@@ -33,7 +34,7 @@ class GameDetails extends PureComponent {
   joinGame = () => this.props.joinGame(this.props.game.id)
 
   makeMove = (toRow, toCell) => {
-    // const {game, updateGame} = this.props
+    const {game, updateGame} = this.props
 
     // const board = game.challenge.map(
     //   (row, rowIndex) => row.map((cell, cellIndex) => {
@@ -46,14 +47,23 @@ class GameDetails extends PureComponent {
     // updateGame(game.id, board)
 
     // use setState to change highlighted squares
-    
+let clickArray = this.state.highLightedSquares
+clickArray[toRow][toCell] = 'X'
     this.setState({
-    highLightedSquares: high
-    })
-    console.log(toRow, toCell)
+      highLightedSquares : clickArray
+       })
+
+       console.log('Board', this.state.highLightedSquares)
+       //  updateGame(game.id, this.state.highLightedSquare)
+  
   }
 
+onclickEvent = () =>{
+  const {game, updateGame} = this.props
 
+console.log('ID', game.id)
+updateGame(game.id, this.state.highLightedSquares)
+}
 
   render() {
     const {game, users, authenticated, userId} = this.props
@@ -102,8 +112,8 @@ class GameDetails extends PureComponent {
           makeMove={this.makeMove} 
           highLightedSquares={this.state.highLightedSquares}
         />
-        // render a button here: submit 
-        <button>Submit</button>
+         {/* render a button here: submit  */}
+        <button id ={game.id} onClick = {this.onclickEvent}>Submit</button>
         </div>
       }
     </Paper>)
