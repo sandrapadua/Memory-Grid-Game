@@ -111,7 +111,9 @@ onclickEvent = () =>{
       {
         game.status !== 'pending' &&
         <div>
-        <Board game={game.challenge} 
+        <Board boardChallenger={game.challenge} 
+        boardAttempter = {game.attempt}
+        turn={game.turn}
           makeMove={this.makeMove} 
           highLightedSquares={this.state.highLightedSquares}
         />

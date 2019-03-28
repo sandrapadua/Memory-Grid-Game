@@ -8,16 +8,27 @@ const renderCel = (makeMove, rowIndex, cellIndex, symbol, hasTurn) => {
       disabled={hasTurn}
       onClick={() => makeMove(rowIndex, cellIndex)}
       key={`${rowIndex}-${cellIndex}`}
-    >{symbol || '-'}</button>
+    ></button>
   )
 }
 
-export default ({game, makeMove,highLightedSquares}) => {
+export default ({boardChallenger, boardAttempter,makeMove, turn}) => {
+  console.log(('BOARD OF CHALLENGER', boardChallenger));
   
+if(turn !== 'challenger'){
+  return boardAttempter.map((cells, rowIndex) =>
+  <div key={rowIndex}>
+    {cells.map((symbol, cellIndex) => renderCel(makeMove, rowIndex, cellIndex,symbol,false))}
+  </div>
+)
 
-  return game.map((cells, rowIndex) =>
+}else{
+  console.log(('BOARD OF ATTEMPTER', boardAttempter));
+
+  return boardChallenger.map((cells, rowIndex) =>
     <div key={rowIndex}>
       {cells.map((symbol, cellIndex) => renderCel(makeMove, rowIndex, cellIndex,symbol,false))}
     </div>
   )
+}
 }

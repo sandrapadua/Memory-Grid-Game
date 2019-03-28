@@ -114,27 +114,36 @@ export default class GameController {
     const isChallenger = game.turn === 'challenger'
     console.log("challenger***************", isChallenger)
     console.log("PLAYER *************",player.role)
-
+let flag = false;
     if (isChallenger && player.role === 'challenger') {
+      flag = true
       game.challenge = update.board
       game.turn = 'attempter'
-    } else if(game.turn === 'attempter') {
+      console.log('challengers turn test!************************************')
+    }
+     else if(game.turn === 'attempter') {
       game.attempt = update.board
-      console.log('attempters turn test!')
+      flag = false
+      console.log('attempters turn test!*********************************')
   }
     await game.save()
 
-   const winner  =  calculateWinner(game.challenge,game.attempt)
+if(!flag){
 
-    console.log('WINNER OF THE GAME **************',winner)
-    if (winner) {
+  const winner  =  calculateWinner(game.challenge,game.attempt)
+
+  console.log('WINNER OF THE GAME **************',winner)
+  if (winner) {
+    
+    game.status = 'finished'
+    game.winner = 'win the game'
+      }else{
+        game.winner = 'game fails'
+        game.status = 'finished'
+      }
+}
+  
       
-      game.status = 'finished'
-      game.winner = 'win the game'
-        }else{
-          game.winner = 'game fails'
-          game.status = 'finished'
-        }
     io.emit('action', {
       type: 'UPDATE_GAME',
       payload: game
