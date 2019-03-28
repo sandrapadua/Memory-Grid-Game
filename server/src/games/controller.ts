@@ -63,6 +63,8 @@ export default class GameController {
     @Param('id') gameId: number
   ) {
     const game = await Game.findOneById(gameId)
+    const attemptPlayer = await Player.findOneById(gameId)
+    console.log(attemptPlayer)
     console.log('MY GAME BOARD',game) // we got a game
     if (!game) throw new BadRequestError(`Game does not exist`)
 
@@ -71,15 +73,15 @@ export default class GameController {
     game.status = 'started'
     await game.save()
 
-    console.log('we will see this', user)
 
     // this is broken
     const player = await Player.create({
       game, 
       user,
+      role:'attempter'
     }).save()
 
-    console.log('we will not see this')
+    console.log('we will not see this***********************', player)
 
     io.emit('action', {
       type: 'UPDATE_GAME',
@@ -108,7 +110,20 @@ export default class GameController {
 
     if (!player) throw new ForbiddenError(`You are not part of this game`)
     if (game.status !== 'started') throw new BadRequestError(`The game is not started yet`)
-    game.challenge = update.board
+    
+    const isChallenger = game.turn === 'challenger'
+    console.log("challenger***************", isChallenger)
+console.log("PLAYER *************",player.role)
+
+    if (isChallenger && player.role === 'challenger') {
+      game.challenge = update.board
+      game.turn = 'attempter'
+    } else {
+      console.log('attempters turn test!')
+
+      
+    }
+    
     await game.save()
 
     // if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)

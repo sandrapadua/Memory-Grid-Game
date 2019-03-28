@@ -27,8 +27,8 @@ export class Game extends BaseEntity {
   @Column('json', {default: emptyAttempt})
   attempt: Attempt
 
-  @Column('char', {length:1, default: 'x'})
-  turn: Symbol
+  @Column('text', {default: 'challenger'})
+  turn: String
 
   @Column('char', {length:1, nullable: true})
   winner: Symbol

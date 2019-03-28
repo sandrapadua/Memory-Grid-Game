@@ -34,18 +34,17 @@ class GameDetails extends PureComponent {
   joinGame = () => this.props.joinGame(this.props.game.id)
 
   makeMove = (toRow, toCell) => {
+    const {game} = this.props
+    console.log('role test:' ,game.players[0].role)
+    console.log(game)
+    
+    const playersUserId = this.props.user.id
 
-    // const board = game.challenge.map(
-    //   (row, rowIndex) => row.map((cell, cellIndex) => {
-    //     if (rowIndex === toRow && cellIndex === toCell) return game.turn
-    //     else return cell
-    //   })
-    // )
-
-    // console.log(board)
+    console.log("userid",playersUserId)
     // updateGame(game.id, board)
-
+// if(game.players.userId === game.players[0].role)
     // use setState to change highlighted squares
+
 let clickArray = this.state.highLightedSquares
 clickArray[toRow][toCell] = 'x'
     this.setState({
@@ -53,8 +52,7 @@ clickArray[toRow][toCell] = 'x'
        })
 
        console.log('Board', this.state.highLightedSquares)
-       //  updateGame(game.id, this.state.highLightedSquare)
-  console.log("USER DETAILS",userId)
+       console.log("USER DETAILS",userId)
 
   }
 
@@ -124,7 +122,9 @@ const mapStateToProps = (state, props) => ({
   authenticated: state.currentUser !== null,
   userId: state.currentUser && userId(state.currentUser.jwt),
   game: state.games && state.games[props.match.params.id],
-  users: state.users
+  users: state.users,
+  user: state.currentUser && state.users &&
+    state.users[userId(state.currentUser.jwt)]
 })
 
 const mapDispatchToProps = {
