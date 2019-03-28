@@ -30,8 +30,8 @@ export class Game extends BaseEntity {
   @Column('text', {default: 'challenger'})
   turn: String
 
-  @Column('char', {length:1, nullable: true})
-  winner: Symbol
+  @Column('text', { nullable: true})
+  winner: String
 
   @Column('text', {default: 'pending'})
   status: Status

@@ -5,8 +5,8 @@ import {
 import User from '../users/entity'
 import { Game, Challenge, Attempt } from './entity'
 import Player from '../players/entity'
-import {IsBoard,
-   // isValidTransition, calculateWinner, finished
+import {IsBoard,calculateWinner,
+  //  isValidTransition,  finished
   } from './logic'
 import { Validate } from 'class-validator'
 import {io} from '../index'
@@ -113,26 +113,34 @@ export default class GameController {
     
     const isChallenger = game.turn === 'challenger'
     console.log("challenger***************", isChallenger)
-console.log("PLAYER *************",player.role)
+    console.log("PLAYER *************",player.role)
 
     if (isChallenger && player.role === 'challenger') {
       game.challenge = update.board
       game.turn = 'attempter'
-    } else {
+    } else if(game.turn === 'attempter') {
       game.attempt = update.board
       console.log('attempters turn test!')
   }
     await game.save()
 
-    
-    
+   const winner  =  calculateWinner(game.challenge,game.attempt)
+
+    console.log('WINNER OF THE GAME **************',winner)
+    if (winner) {
+      
+      game.status = 'finished'
+      game.winner = 'win the game'
+        }else{
+          game.winner = 'game fails'
+          game.status = 'finished'
+        }
     io.emit('action', {
       type: 'UPDATE_GAME',
       payload: game
     })
 
-    io.emit('action', {type: 'Hello_World', payload: 'hi'})
-
+    await game.save()
     return game
   }
 
