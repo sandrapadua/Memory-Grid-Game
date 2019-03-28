@@ -34,7 +34,6 @@ class GameDetails extends PureComponent {
   joinGame = () => this.props.joinGame(this.props.game.id)
 
   makeMove = (toRow, toCell) => {
-    const {game, updateGame} = this.props
 
     // const board = game.challenge.map(
     //   (row, rowIndex) => row.map((cell, cellIndex) => {
@@ -48,21 +47,22 @@ class GameDetails extends PureComponent {
 
     // use setState to change highlighted squares
 let clickArray = this.state.highLightedSquares
-clickArray[toRow][toCell] = 'X'
+clickArray[toRow][toCell] = 'x'
     this.setState({
       highLightedSquares : clickArray
        })
 
        console.log('Board', this.state.highLightedSquares)
        //  updateGame(game.id, this.state.highLightedSquare)
-  
+  console.log("USER DETAILS",userId)
+
   }
 
 onclickEvent = () =>{
   const {game, updateGame} = this.props
 
-console.log('ID', game.id)
-updateGame(game.id, this.state.highLightedSquares)
+  console.log('ID', game.id)
+  updateGame(game.id, this.state.highLightedSquares)
 }
 
   render() {

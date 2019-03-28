@@ -1,5 +1,5 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Index, OneToMany, ManyToOne } from 'typeorm'
-import User from '../users/entity'
+import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Index, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm'
+import Player from '../players/entity'
 
 export type Symbol = 'x' 
 export type Row = [  null,  null,  null ]
@@ -40,24 +40,8 @@ export class Game extends BaseEntity {
   // http://typeorm.io/#/many-to-one-one-to-many-relations
   @OneToMany(_ => Player, player => player.game, {eager:true})
   players: Player[]
-}
 
-@Entity()
-@Index(['game', 'user'], {unique:true})
-export class Player extends BaseEntity {
-
-  @PrimaryGeneratedColumn()
-  id?: number
-
-  @ManyToOne(_ => User, user => user.players)
-  user: User
-
-  @ManyToOne(_ => Game, game => game.players)
-  game: Game
-
-  // @Column('char', {length: 1})
-  // symbol: Symbol
-
-  @Column('integer', { name: 'user_id' })
-  userId: number
+  @OneToOne(() => Player, {eager:true})
+  @JoinColumn()
+  challenger: Player
 }

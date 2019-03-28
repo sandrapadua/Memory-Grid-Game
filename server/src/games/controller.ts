@@ -3,7 +3,8 @@ import {
   Body, Patch 
 } from 'routing-controllers'
 import User from '../users/entity'
-import { Game, Player, Challenge,Attempt } from './entities'
+import { Game, Challenge, Attempt } from './entity'
+import Player from '../players/entity'
 import {IsBoard,
    // isValidTransition, calculateWinner, finished
   } from './logic'
@@ -15,7 +16,7 @@ class GameUpdate {
   @Validate(IsBoard, {
     message: 'Not a valid board'
   })
-  board: Challenge| Attempt
+  board: Challenge | Attempt
 }
 
 @JsonController()
@@ -27,16 +28,24 @@ export default class GameController {
   async createGame(
     @CurrentUser() user: User 
   ) {
+    console.log('get enterted into loclhost/games')
     const entity = await Game.create().save()
 
-    await Player.create({
+    const player = await Player.create({
       game: entity, 
-      user,
-      symbol: 'x',
-
-    }).save()
+      user
+    })
+    
+    await player.save()
 
     const game = await Game.findOneById(entity.id)
+
+    if (game) {
+      game.challenger = player
+      await game.save()
+    }
+
+    console.log('game test:', game)
 
     io.emit('action', {
       type: 'ADD_GAME',
@@ -54,7 +63,7 @@ export default class GameController {
     @Param('id') gameId: number
   ) {
     const game = await Game.findOneById(gameId)
-    console.log(game) // we got a game
+    console.log('MY GAME BOARD',game) // we got a game
     if (!game) throw new BadRequestError(`Game does not exist`)
 
     if (game.status !== 'pending') throw new BadRequestError(`Game is already started`)
@@ -99,6 +108,9 @@ export default class GameController {
 
     if (!player) throw new ForbiddenError(`You are not part of this game`)
     if (game.status !== 'started') throw new BadRequestError(`The game is not started yet`)
+    game.challenge = update.board
+    await game.save()
+
     // if (player.symbol !== game.turn) throw new BadRequestError(`It's not your turn`)
     // if (!isValidTransition(player.symbol, game.board, update.board)) {
     //   throw new BadRequestError(`Invalid move`)
