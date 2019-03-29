@@ -153,9 +153,9 @@ class GameDetails extends PureComponent {
 
     const boards = game.status !== 'pending' &&
       <div>
-        {game.winner}
+        <h1>{game.winner}</h1>
 
-        <div>Turn: {game.turn}</div>
+        {/* <div>Turn: {game.turn}</div> */}
 
         {
           game.turn === 'challenger'
