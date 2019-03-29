@@ -1,11 +1,13 @@
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator'
+import { Challenge,  Attempt } from './entity'
 import { Board, Symbol, Row } from './entities'
 
 @ValidatorConstraint()
 export class IsBoard implements ValidatorConstraintInterface {
 
-  validate(board: Board) {
-    const symbols = [ 'x', 'o', null ]
+  validate(board: Challenge|Attempt) {
+    const symbols = [ 'x', null ]
+
     
     return board.length === 3 &&
       board.every(row =>
@@ -15,40 +17,14 @@ export class IsBoard implements ValidatorConstraintInterface {
   }
 }
 
-export const isValidTransition = (playerSymbol: Symbol, from: Board, to: Board) => {
-  const changes = from
-    .map(
-      (row, rowIndex) => row.map((symbol, columnIndex) => ({
-        from: symbol, 
-        to: to[rowIndex][columnIndex]
-      }))
-    )
-    .reduce((a,b) => a.concat(b))
-    .filter(change => change.from !== change.to)
 
-  return changes.length === 1 && 
-    changes[0].to === playerSymbol && 
-    changes[0].from === null
+
+export const calculateWinner = function (board1, board2) {
+  const string1 = JSON.stringify(board1)
+  const string2 = JSON.stringify(board2)
+  return string1 === string2
 }
+  
 
-export const calculateWinner = (board: Board): Symbol | null =>
-  board
-    .concat(
-      // vertical winner
-      [0, 1, 2].map(n => board.map(row => row[n])) as Row[]
-    )
-    .concat(
-      [
-        // diagonal winner ltr
-        [0, 1, 2].map(n => board[n][n]),
-        // diagonal winner rtl
-        [0, 1, 2].map(n => board[2-n][n])
-      ] as Row[]
-    )
-    .filter(row => row[0] && row.every(symbol => symbol === row[0]))
-    .map(row => row[0])[0] || null
 
-export const finished = (board: Board): boolean =>
-  board
-    .reduce((a,b) => a.concat(b) as Row)
-    .every(symbol => symbol !== null)
+ 

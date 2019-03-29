@@ -5,7 +5,10 @@ import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
-import Card, { CardActions, CardContent } from '@material-ui/core/Card'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
 import Typography from '@material-ui/core/Typography'
 import './GamesList.css'
 
