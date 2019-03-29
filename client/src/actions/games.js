@@ -46,6 +46,7 @@ export const joinGame = (gameId) => (dispatch, getState) => {
   const state = getState()
   const jwt = state.currentUser.jwt
 console.log('JOIN GAME')
+
   if (isExpired(jwt)) return dispatch(logout())
 
   request
@@ -68,7 +69,6 @@ export const createGame = () => (dispatch, getState) => {
     .catch(err => console.error(err))
 }
 
-// change this 
 export const updateGame = (gameId, board) => (dispatch, getState) => {
   console.log('entered into updategame',board)
   const state = getState()
@@ -78,6 +78,7 @@ export const updateGame = (gameId, board) => (dispatch, getState) => {
 
   request
     .patch(`${baseUrl}/games/${gameId}`) // localhost:4000/games/1
+
     .set('Authorization', `Bearer ${jwt}`)
     .send({ board })
     .then(_ => dispatch(updateGameSuccess()))

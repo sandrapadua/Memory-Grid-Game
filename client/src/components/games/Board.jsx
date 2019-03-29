@@ -7,6 +7,8 @@ const renderCel = (makeMove, rowIndex, cellIndex, symbol, hasTurn) => {
 
   const content = symbol || '-'
 
+
+
   return (
     <button
       className="board-tile"

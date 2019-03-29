@@ -1,11 +1,14 @@
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator'
 import { Challenge,  Attempt } from './entity'
+import { Board, Symbol, Row } from './entities'
 
 @ValidatorConstraint()
 export class IsBoard implements ValidatorConstraintInterface {
 
   validate(board: Challenge|Attempt) {
     const symbols = [ 'x', null ]
+
+    
     return board.length === 3 &&
       board.every(row =>
         row.length === 3 &&
@@ -24,5 +27,4 @@ export const calculateWinner = function (board1, board2) {
   
 
 
-  
-    
+ 
