@@ -6,6 +6,7 @@ import User from './users/entity'
 import { Game } from './games/entity'
 import Player from './players/entity'
 
+
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
   tableName(targetName: string, userSpecifiedName: string): string {

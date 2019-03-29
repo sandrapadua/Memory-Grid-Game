@@ -27,6 +27,7 @@ class GameDetails extends PureComponent {
     timerStarted: false
   }
 
+
   componentWillMount() {
     if (this.props.authenticated) {
       if (this.props.game === null) this.props.getGames()
@@ -100,6 +101,7 @@ class GameDetails extends PureComponent {
 
     const firstSquare = this.state.squares[0][0]
     console.log('firstSquare test:', firstSquare)
+
 
     if (!authenticated) return (
 			<Redirect to="/login" />
@@ -178,6 +180,7 @@ class GameDetails extends PureComponent {
         </button>
       </div>
 
+
     return (<Paper className="outer-paper">
       <h1>Game #{game.id}</h1>
 
@@ -192,6 +195,7 @@ class GameDetails extends PureComponent {
       <hr />
 
       {boards}
+
     </Paper>)
   }
 }
@@ -203,6 +207,7 @@ const mapStateToProps = (state, props) => ({
   users: state.users,
   user: state.currentUser && state.users &&
     state.users[userId(state.currentUser.jwt)]
+
 })
 
 const mapDispatchToProps = {

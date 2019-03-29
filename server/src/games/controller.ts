@@ -5,9 +5,8 @@ import {
 import User from '../users/entity'
 import { Game, Challenge, Attempt } from './entity'
 import Player from '../players/entity'
-import {IsBoard,calculateWinner,
-  //  isValidTransition,  finished
-  } from './logic'
+import {IsBoard,calculateWinner} from './logic'
+import { Game, Player, Board } from './entities'
 import { Validate } from 'class-validator'
 import {io} from '../index'
 
@@ -17,6 +16,7 @@ class GameUpdate {
     message: 'Not a valid board'
   })
   board: Challenge | Attempt
+
 }
 
 @JsonController()
@@ -47,6 +47,7 @@ export default class GameController {
 
     console.log('game test:', game)
 
+
     io.emit('action', {
       type: 'ADD_GAME',
       payload: game
@@ -74,7 +75,6 @@ export default class GameController {
     await game.save()
 
 
-    // this is broken
     const player = await Player.create({
       game, 
       user,
@@ -103,6 +103,7 @@ export default class GameController {
     @Body() update: GameUpdate
   ) {
     console.log('****************ENTERED INTO SERVER!!!!!*****************', update)
+
     const game = await Game.findOneById(gameId)
     if (!game) throw new NotFoundError(`Game does not exist`)
 
@@ -144,12 +145,14 @@ if(!flag){
 }
   
       
+
     io.emit('action', {
       type: 'UPDATE_GAME',
       payload: game
     })
 
     await game.save()
+
     return game
   }
 
