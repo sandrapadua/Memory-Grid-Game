@@ -22,7 +22,9 @@ class GameDetails extends PureComponent {
       [
         null, null, null
       ]
-    ]
+    ],
+    showChallenge: true,
+    timerStarted: false
   }
 
   componentWillMount() {
@@ -58,6 +60,33 @@ class GameDetails extends PureComponent {
     }
   }
 
+  setTimer() {
+    // clear any existing timer
+    if (this._timer != null) {
+      clearTimeout(this._timer)
+    }
+
+    // hide after `delay` milliseconds
+    const hideChallenge = () => {
+      this.setState({showChallenge: false});
+      this._timer = null;
+    }
+    
+    // Make "this" work inside of non-class method above
+    hideChallenge.bind(this)
+
+    this._timer = setTimeout(
+      hideChallenge,
+      5000
+    );
+
+    this.setState({ timerStarted: true })
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._timer);
+  }
+
   onclickEvent = () =>{
     const {game, updateGame} = this.props
 
@@ -67,6 +96,7 @@ class GameDetails extends PureComponent {
 
   render() {
     const {game, users, authenticated, userId} = this.props
+    console.log('userId test:', userId)
 
     const firstSquare = this.state.squares[0][0]
     console.log('firstSquare test:', firstSquare)
@@ -79,6 +109,7 @@ class GameDetails extends PureComponent {
     if (!game) return 'Not found'
 
     const player = game.players.find(p => p.userId === userId)
+    console.log('player test:', player)
 
     const winningPlayer = game.players
       .filter(p => p.symbol === game.winner)
@@ -95,6 +126,29 @@ class GameDetails extends PureComponent {
       game.players.map(p => p.userId).indexOf(userId) === -1 &&
       <button onClick={this.joinGame}>Join Game</button>
 
+    const challenge = <Board
+      boardChallenger={game.challenge} 
+      boardAttempter = {game.attempt}
+      turn={'challenger'}
+      makeMove={() => {}} 
+      squares={this.state.squares}
+      showBoard={true}
+    />
+
+    const main = <Board
+      boardChallenger={game.challenge} 
+      boardAttempter = {game.attempt}
+      turn={game.turn}
+      makeMove={this.makeMove} 
+      squares={this.state.squares}
+    />
+
+    const isPlayerAttempter = player && player.role === 'attempter'
+
+    if (isPlayerAttempter && !this.state.timerStarted) {
+      this.setTimer()
+    }
+
     const boards = game.status !== 'pending' &&
       <div>
         {game.winner}
@@ -103,43 +157,18 @@ class GameDetails extends PureComponent {
 
         {
           game.turn === 'challenger'
-            ? <Board
-              boardChallenger={game.challenge} 
-              boardAttempter = {game.attempt}
-              turn={game.turn}
-              makeMove={this.makeMove} 
-              squares={this.state.squares}
-            />
-            : player.role === 'attempter'
+            ? main
+            : isPlayerAttempter
               ? <div>
-                <Expire delay={10000}>
-                  <Board
-                    boardChallenger={game.challenge} 
-                    boardAttempter = {game.attempt}
-                    turn={'challenger'}
-                    makeMove={() => {}} 
-                    squares={this.state.squares}
-                    showBoard={true}
-                  />
-
-                  <hr />
-                </Expire>
-
-                <Board
-                  boardChallenger={game.challenge} 
-                  boardAttempter = {game.attempt}
-                  turn={game.turn}
-                  makeMove={this.makeMove} 
-                  squares={this.state.squares}
-                />
+                {
+                  this.state.showChallenge
+                    ? challenge
+                    : null
+                }
+                <hr />
+                {main}
               </div>
-              : <Board
-                boardChallenger={game.challenge} 
-                boardAttempter = {game.attempt}
-                turn={game.turn}
-                makeMove={this.makeMove} 
-                squares={this.state.squares}
-              />
+              : main
         }
 
         
