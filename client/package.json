@@ -8,6 +8,7 @@
     "acorn": "^6.1.0",
     "ajv": "^6.9.1",
     "react": "^16.2.0",
+    "react-compound-timer": "^1.0.12",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
